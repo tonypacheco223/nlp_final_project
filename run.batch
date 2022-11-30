@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --account=PAS2348
+#SBATCH --time=12:00:00
+#SBATCH --gpus=1
+#SBATCH --cpus-per-gpu=2
+#SBATCH --mem=4gb
+#SBATCH --job-name=esnli
+#SBATCH --mail-type=ALL
+
+
+python3 main.py
