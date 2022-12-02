@@ -147,7 +147,7 @@ def tokenize_dataset (dataset, model_checkpoint = 'roberta-base'):
                       padding = 'max_length', 
                       truncation = True)
     
-  tokenized_datasets = dataset.map (tokenize_function,
+  tokenized_datasets = dataset.map(tokenize_function,
                                   batched = True,
                                   remove_columns = ['premise', 'hypothesis']
                                   ).with_format("torch")

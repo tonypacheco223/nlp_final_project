@@ -159,7 +159,14 @@ def model_training (model, epochs, tokenized_datasets, batch_size):
     torch.cuda.manual_seed_all(seed_val)
 
     training_stats = {'epoch': [], 'train_loss': [], 'eval_loss': [], 'train_acc': [], 'eval_acc': []}
-
+    [total_train, total_train_accuracy, total_train_loss, predictions, true_labels] = train (model, optimizer, scheduler, train_loader, 0, eval = True)
+    [total_eval, total_eval_accuracy, total_eval_loss, predictions, true_labels] = train (model, optimizer, scheduler, val_loader, 0, eval = True)
+    # Record all statistics from this epoch.
+    training_stats['epoch'].append (0)
+    training_stats['train_loss'].append (total_train_loss / len (train_loader))
+    training_stats['eval_loss'].append (total_eval_loss / len (val_loader))
+    training_stats['train_acc'].append (total_train_accuracy / total_train)
+    training_stats['eval_acc'].append (total_eval_accuracy / total_eval)
     for epoch_i in tqdm(range(0, epochs)):
 
         [total_train, total_train_accuracy, total_train_loss, predictions, true_labels] = train (model, optimizer, scheduler, train_loader, epoch_i, eval = False)
@@ -174,7 +181,7 @@ def model_training (model, epochs, tokenized_datasets, batch_size):
 
     test_metrics = {}    
     [test_metrics['total'], test_metrics['accuracy'], test_metrics['loss'], test_metrics['predictions'], test_metrics['true_labels']] = train (model, optimizer, scheduler, test_loader, 0, eval = True)
-
+    # print(test_metrics)
     fig, axs = plt.subplots(1,2, figsize=(15,5))
     fig.tight_layout()
     # Graph for Loss
@@ -194,4 +201,4 @@ def model_training (model, epochs, tokenized_datasets, batch_size):
     axs[1].legend ()
 
     plt.show ()
-    return (model, test_metrics)
+    return (model, test_metrics, training_stats)

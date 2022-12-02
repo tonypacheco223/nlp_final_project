@@ -2,10 +2,11 @@
 #SBATCH --account=PAS2348
 #SBATCH --time=12:00:00
 #SBATCH --gpus=1
-#SBATCH --cpus-per-gpu=2
+#SBATCH --cpus-per-gpu=1
 #SBATCH --mem=4gb
 #SBATCH --job-name=esnli
 #SBATCH --mail-type=ALL
-
-
-python3 main.py
+echo "activate conda"
+conda activate nlp-NFL
+echo "run main"
+python main.py

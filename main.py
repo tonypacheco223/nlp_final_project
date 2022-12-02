@@ -48,6 +48,7 @@ from load_dataset import *
 from training import * 
 import json
 import torch, gc
+from sklearn.metrics import classification_report
 
 def main():
     model_save_path = "/users/PAS2348/ramirez537/snli/model_saved"
@@ -60,13 +61,28 @@ def main():
    
     gc.collect()
     torch.cuda.empty_cache()
-    (model, test_metrics) = model_training (model, 1, tokenized_dataset, 128)
-
-    with open("test_metrics", "w") as outfile:
-        json.dump(test_metrics, outfile)
+    (model, test_metrics, trainning_stats) = model_training (model, 10, tokenized_dataset, 128)
 
     model.eval ()
     model.save_pretrained (model_save_path)
+    x = classification_report(test_metrics['true_labels'], test_metrics['predictions'], digits=3, output_dict=True)
+
+    print(x)
+    print(type(x))
+    with open("training_stats.json", "w") as f:
+        json.dump(trainning_stats, f)
+
+    try: 
+        with open("eval_metrics.json", "w") as outfile:
+            json.dump(x,outfile)
+    except:
+        print("error eval_metrics")
+    
+    try:
+        with open("test_metrics.json", "w") as outfile:
+            json.dump(test_metrics, outfile)
+    except:
+        print("error testing metics")
 
 if __name__ == '__main__':
     main()
